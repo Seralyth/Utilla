@@ -97,8 +97,8 @@ internal class ConductBoardManager : MonoBehaviour
 
         boardContent.Insert(0, new());
 
-        CreateButton(-1f, "-->", NextPage);
-        CreateButton(1f, "<--", PrevPage);
+        CreateConductButton(-1f, "-->", NextPage);
+        CreateConductButton(1f, "<--", PrevPage);
 
         ShowPage();
         CheckVersion();
@@ -143,9 +143,10 @@ internal class ConductBoardManager : MonoBehaviour
         }
     }
 
-    private void CreateButton(float horizontalPosition, string text, Action onButtonPressed = null)
+    private void CreateConductButton(float horizontalPosition, string text, Action onButtonPressed = null)
     {
         GameObject buttonObject = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        buttonObject.name = $"UtillaButton_{text}";
         buttonObject.transform.parent = conductTransform;
         buttonObject.transform.localPosition = new Vector3(horizontalPosition, 0.52f, 0.13f);
         buttonObject.transform.localRotation = Quaternion.Euler(353.5f, 0f, 0f);
@@ -206,7 +207,6 @@ internal class ConductBoardManager : MonoBehaviour
 
     private async void CreateEntries()
     {
-        await CreateFeaturedEntry();
         await DownloadEntries();
 
         foreach (var info in Chainloader.PluginInfos)
@@ -241,58 +241,6 @@ internal class ConductBoardManager : MonoBehaviour
                 }
             }
         }
-    }
-
-    private async Task CreateFeaturedEntry()
-    {
-        /*
-        try
-        {
-            using UnityWebRequest srcLinkRequest = UnityWebRequest.Get(string.Join('/', Constants.InfoRepositoryURL, "ConductBoard", "ModManagerSource.txt"));
-            UnityWebRequestAsyncOperation asyncOperation = srcLinkRequest.SendWebRequest();
-            await asyncOperation;
-
-            if (srcLinkRequest.result != UnityWebRequest.Result.Success) return;
-
-            using UnityWebRequest srcTextRequest = UnityWebRequest.Get(srcLinkRequest.downloadHandler.text.Trim());
-            asyncOperation = srcTextRequest.SendWebRequest();
-            await asyncOperation;
-
-            if (srcTextRequest.result != UnityWebRequest.Result.Success) return;
-
-            JArray array = JArray.Parse(srcTextRequest.downloadHandler.text);
-            System.Random random = new(DateTime.UtcNow.Date.DayOfYear);
-            IEnumerable<JObject> elements = array.Select(element => element as JObject).Where(element =>
-            {
-                string group = (string)element.Property("group").Value;
-                return group != "Core";// && group != "Libraries";
-            });
-            JObject dailyElement = elements.ElementAt(random.Next(elements.Count()));
-
-            StringBuilder str = new();
-            str.AppendLine($"<align=center><smallcaps>{dailyElement.Property("name").Value}</smallcaps> BY <smallcaps>{(string)dailyElement.Property("author").Value}</smallcaps></align>");
-
-            using UnityWebRequest repositoryRequest = UnityWebRequest.Get($"https://api.github.com/repos/{(string)dailyElement.Property("git_path").Value}");
-            asyncOperation = repositoryRequest.SendWebRequest();
-            await asyncOperation;
-
-            if (repositoryRequest.result == UnityWebRequest.Result.Success)
-            {
-                JObject repositoryObj = JObject.Parse(repositoryRequest.downloadHandler.text);
-                string description = (string)repositoryObj.Property("description").Value;
-                if (!string.IsNullOrEmpty(description) && !string.IsNullOrWhiteSpace(description)) str.AppendLine().AppendLine($"<size=70%><align=center>\"{description}\"</align></size>");
-
-                str.AppendLine().AppendLine($"<size=70%>VERSION<line-height=-45>").AppendLine("<align=center>CATEGORY</align>").AppendLine("<align=right>UPDATED</align></size></line-height>");
-                str.AppendLine($"{(string)dailyElement.Property("version").Value}<line-height=-45>").AppendLine($"<align=center>{((string)dailyElement.Property("group").Value).ToUpper()}</align>").AppendLine($"<align=right>{(DateTime.TryParse((string)repositoryObj.Property("updated_at").Value, out DateTime updated) ? updated.ToShortDateString() : "???")}</align></size></line-height>");
-            }
-
-            boardContent.Add(new("FEATURED MOD", str.ToString()));
-        }
-        catch(Exception ex)
-        {
-            Logging.Error(ex);
-        }
-        */
     }
 
     public async Task DownloadEntries()

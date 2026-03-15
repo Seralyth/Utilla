@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Utilla.Models;
 using Utilla.Tools;
@@ -232,6 +233,18 @@ namespace Utilla.Behaviours
             }
         }
 
+        static GameObject legalButton;
+        public void ChangeLegalStatus()
+        {
+            bool current = PlayerPrefs.GetInt(Constants.LegalStatusKey, 0) == 1;
+            bool legal = !current;
+            PlayerPrefs.SetInt(Constants.LegalStatusKey, legal ? 1 : 0);
+            PlayerPrefs.Save();
+            current = PlayerPrefs.GetInt(Constants.LegalStatusKey, 0) == 1;
+            legalButton.transform.Find("Title")?.GetComponent<TMP_Text>().text = current ? "LEGAL" : "ILLEGAL";
+            legalButton.GetComponent<Renderer>().material = current ? Layout.currentButtons.First().gameObject.GetComponent<GorillaPressableButton>().unpressedMaterial : Layout.currentButtons.First().gameObject.GetComponent<GorillaPressableButton>().pressedMaterial;
+        }
+
         private void CreatePageButtons(GameObject templateButton)
         {
             GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -292,6 +305,12 @@ namespace Utilla.Behaviours
             GameObject previousPageButton = CreatePageButton("<--", PreviousPage);
             previousPageButton.transform.localPosition = new Vector3(isCustomSelector ? -0.78f : -0.745f, -0.75f, -0.03f);
 
+            bool legal = PlayerPrefs.GetInt(Constants.LegalStatusKey, 0) == 1;
+            legalButton = CreatePageButton(legal ? "LEGAL" : "ILLEGAL", ChangeLegalStatus);
+            legalButton.transform.localPosition = new Vector3(0.155f, 0.005f, -0.03f);
+            legalButton.GetComponent<Renderer>().material = legal ? Layout.currentButtons.First().GetComponent<GorillaPressableButton>().unpressedMaterial : Layout.currentButtons.First().GetComponent<GorillaPressableButton>().pressedMaterial;
+
+            GameObject.Find("GameModes Title Text").transform.localPosition = new Vector3(1.4732f, -4.2007f, 6.463f); // move the game mode text a bit (looks good)
             Destroy(cube);
 
             if (templateButton.transform.childCount != 0)

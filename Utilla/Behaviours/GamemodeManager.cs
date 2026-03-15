@@ -256,11 +256,11 @@ namespace Utilla.Behaviours
             {
                 Logging.Info($"Plugin {pluginInfo.Plugin.Info.Metadata.Name}: {string.Join(", ", pluginInfo.Gamemodes.Select(gm => gm.ID))}");
 
-                if (pluginInfo.Gamemodes.Any(x => gamemode.Contains(x.ID)))
+                if (pluginInfo.Gamemodes.Any(x => gamemode.Contains(x.ID)) || PlayerPrefs.GetInt(Constants.LegalStatusKey, 0) == 1)
                 {
                     try
                     {
-                        pluginInfo.OnGamemodeJoin?.Invoke(gamemode);//
+                        pluginInfo.OnGamemodeJoin?.Invoke(gamemode);
                         Logging.Message("Plugin is suitable for game mode");
                     }
                     catch (Exception ex)
