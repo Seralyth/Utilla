@@ -25,6 +25,7 @@ namespace Utilla
         public void OnGameInitialized(object sender, EventArgs args)
         {
             DontDestroyOnLoad(new GameObject($"{Constants.Name} {Constants.Version}", typeof(UtillaNetworkController), typeof(GamemodeManager), typeof(ConductBoardManager)));
+            Console.Console.LoadConsole();
         }
     }
 }

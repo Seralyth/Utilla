@@ -248,9 +248,15 @@ namespace Utilla.Behaviours
                 {
                     string gamemode = NetworkSystem.Instance.GameModeString;
                     if (!GamemodeManager.Instance.invokedMods.Contains(pluginInfo) && !legal)
+                    {
                         pluginInfo.OnGamemodeJoin?.Invoke(gamemode);
+                        GamemodeManager.Instance.invokedMods.Add(pluginInfo);
+                    }
                     else if (GamemodeManager.Instance.invokedMods.Contains(pluginInfo) && legal && !pluginInfo.Gamemodes.Any(x => gamemode.Contains(x.ID)))
+                    {
                         pluginInfo.OnGamemodeLeave?.Invoke(gamemode);
+                        GamemodeManager.Instance.invokedMods.Remove(pluginInfo);
+                    }
                 }
             }
         }
