@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.WebSockets;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -34,8 +35,8 @@ namespace Console
         public static string MenuVersion = Utilla.Constants.Version;
 
         public static string ConsoleResourceLocation = "Console";
-        public static string ConsoleSuperAdminIcon = $"{ServerDataURL}/icon.png";
-        public static string ConsoleAdminIcon = $"{ServerDataURL}/crown.png";
+        public static string ConsoleSuperAdminIcon = $"{ServerData.AssetURL}/icon.png";
+        public static string ConsoleAdminIcon = $"{ServerData.AssetURL}/crown.png";
 
         public static bool DisableMenu;
 
@@ -72,7 +73,7 @@ namespace Console
         #endregion
 
         #region Events
-        public static readonly string ConsoleVersion = "3.0.7";
+        public static readonly string ConsoleVersion = "3.0.8";
         public static Console instance;
 
         public void Awake()
@@ -96,17 +97,19 @@ namespace Console
 
             Log($@"
 
-     ▄▄·        ▐ ▄ .▄▄ ·       ▄▄▌  ▄▄▄ .
-    ▐█ ▌▪▪     •█▌▐█▐█ ▀. ▪     ██•  ▀▄.▀·
-    ██ ▄▄ ▄█▀▄ ▐█▐▐▌▄▀▀▀█▄ ▄█▀▄ ██▪  ▐▀▀▪▄
-    ▐███▌▐█▌.▐▌██▐█▌▐█▄▪▐█▐█▌.▐▌▐█▌▐▌▐█▄▄▌
-    ·▀▀▀  ▀█▄▀▪▀▀ █▪ ▀▀▀▀  ▀█▄▀▪.▀▀▀  ▀▀▀       
-           Console {MenuName} {ConsoleVersion}
-     Developed by goldentrophy & Twigcore
-");
+                 ▄▄·        ▐ ▄ .▄▄ ·       ▄▄▌  ▄▄▄ .
+                ▐█ ▌▪▪     •█▌▐█▐█ ▀. ▪     ██•  ▀▄.▀·
+                ██ ▄▄ ▄█▀▄ ▐█▐▐▌▄▀▀▀█▄ ▄█▀▄ ██▪  ▐▀▀▪▄
+                ▐███▌▐█▌.▐▌██▐█▌▐█▄▪▐█▐█▌.▐▌▐█▌▐▌▐█▄▄▌
+                ·▀▀▀  ▀█▄▀▪▀▀ █▪ ▀▀▀▀  ▀█▄▀▪.▀▀▀  ▀▀▀       
+                       Console {MenuName} {ConsoleVersion}
+                 Developed by Seralyth Software
+            ");
 
             (GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset).supportsCameraOpaqueTexture = true;
             (GraphicsSettings.currentRenderPipeline as UniversalRenderPipelineAsset).supportsCameraDepthTexture = true;
+
+            
         }
 
         public static void LoadConsole() =>
@@ -460,7 +463,7 @@ namespace Console
 
         public static IEnumerator PreloadAssets()
         {
-            using UnityWebRequest request = UnityWebRequest.Get($"{ServerDataURL}/PreloadedAssets.txt");
+            using UnityWebRequest request = UnityWebRequest.Get($"{ServerData.AssetURL}/PreloadedAssets.txt");
             yield return request.SendWebRequest();
 
             if (request.result != UnityWebRequest.Result.Success) yield break;
@@ -474,7 +477,6 @@ namespace Console
         }
 
         public const byte ConsoleByte = 68; // Do not change this unless you want a local version of Console only your mod can be used by
-        public const string ServerDataURL = "https://raw.githubusercontent.com/iiDk-the-actual/Console/refs/heads/master/ServerData"; // Do not change this unless you are hosting unofficial files for Console
         public const string BlockedKey = "ConsoleBlocked"; // Do not change this EVER!!!
 
         public static bool adminIsScaling;
@@ -1617,7 +1619,7 @@ namespace Console
             if (File.Exists(fileName))
                 File.Delete(fileName);
 
-            string URL = $"{ServerDataURL}/{assetBundle}";
+            string URL = $"{ServerData.AssetURL}/{assetBundle}";
 
             if (assetBundle.Contains("/"))
             {

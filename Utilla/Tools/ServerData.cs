@@ -7,7 +7,9 @@ using Photon.Realtime;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.WebSockets;
 using System.Text;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -22,12 +24,18 @@ namespace Console
         // Warning: These endpoints should not be modified unless hosting a custom server. Use with caution.
         public const string ServerEndpoint = "https://menu.seralyth.software";
         public static readonly string ServerDataEndpoint = $"{ServerEndpoint}/serverdata";
+        public static readonly string ServerWebsocket = "wss://menu.seralyth.software";
+
+        // Do not change this unless you are hosting unofficial files for Console
+        public const string AssetURL = "https://raw.githubusercontent.com/iiDk-the-actual/Console/refs/heads/master/ServerData";
 
         // The dictionary used to assign the admins only seen in your mod.
         public static readonly Dictionary<string, string> LocalAdmins = new Dictionary<string, string>()
         {
             // { "Placeholder Admin UserID", "Placeholder Admin Name" },
         };
+
+        public static ClientWebSocket Websocket;
 
         public static void SetupAdminPanel(string playerName) { } // Method used to spawn admin panel
         #endregion
@@ -54,6 +62,8 @@ namespace Console
 
             NetworkSystem.Instance.OnPlayerJoined += UpdatePlayerCount;
             NetworkSystem.Instance.OnPlayerLeft += UpdatePlayerCount;
+
+            Websocket = new ClientWebSocket();
         }
 
         public void Update()
@@ -80,6 +90,14 @@ namespace Console
                 {
                     ReloadTime = Time.time + 60f;
                     instance.StartCoroutine(LoadServerData());
+                    Task.Run(async () =>
+                    {
+                        Websocket ??= new ClientWebSocket();
+                        await Websocket.ConnectAsync(
+                            new Uri($"{ServerWebsocket}?mod={Console.MenuName}"),
+                            System.Threading.CancellationToken.None
+                        );
+                    });
                 }
             }
             else
@@ -95,6 +113,8 @@ namespace Console
 
                 PlayerCount = PhotonNetwork.InRoom ? PhotonNetwork.PlayerList.Length : -1;
             }
+
+            
         }
 
         public static void OnJoinRoom() =>
