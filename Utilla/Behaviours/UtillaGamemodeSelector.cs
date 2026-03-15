@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
 using Utilla.Models;
 using Utilla.Tools;
 
@@ -243,6 +244,14 @@ namespace Utilla.Behaviours
             current = PlayerPrefs.GetInt(Constants.LegalStatusKey, 0) == 1;
             legalButton.transform.Find("Title")?.GetComponent<TMP_Text>().text = current ? "LEGAL" : "ILLEGAL";
             legalButton.GetComponent<Renderer>().material = current ? Layout.currentButtons.First().gameObject.GetComponent<GorillaPressableButton>().unpressedMaterial : Layout.currentButtons.First().gameObject.GetComponent<GorillaPressableButton>().pressedMaterial;
+            if (!legal && GamemodeManager.Instance.pluginInfos.Any())
+            {
+                foreach (PluginInfo pluginInfo in GamemodeManager.Instance.pluginInfos)
+                {
+                    if (!GamemodeManager.Instance.invokedMods.Contains(pluginInfo)) 
+                        pluginInfo.OnGamemodeJoin?.Invoke(NetworkSystem.Instance.GameModeString);
+                }
+            }
         }
 
         private void CreatePageButtons(GameObject templateButton)

@@ -33,7 +33,7 @@ namespace Utilla.Behaviours
         // Custom game modes
         public List<Gamemode> CustomGameModes;
         private GameObject customGameModeContainer;
-        private List<PluginInfo> pluginInfos;
+        internal List<PluginInfo> pluginInfos;
 
         public void Awake()
         {
@@ -246,6 +246,7 @@ namespace Utilla.Behaviours
             }
         }
 
+        public List<PluginInfo> invokedMods = [];
         internal void OnRoomJoin(object sender, Events.RoomJoinedArgs args)
         {
             string gamemode = args.Gamemode;
@@ -256,11 +257,12 @@ namespace Utilla.Behaviours
             {
                 Logging.Info($"Plugin {pluginInfo.Plugin.Info.Metadata.Name}: {string.Join(", ", pluginInfo.Gamemodes.Select(gm => gm.ID))}");
 
-                if (pluginInfo.Gamemodes.Any(x => gamemode.Contains(x.ID)) || PlayerPrefs.GetInt(Constants.LegalStatusKey, 0) == 1)
+                if (pluginInfo.Gamemodes.Any(x => gamemode.Contains(x.ID)) || PlayerPrefs.GetInt(Constants.LegalStatusKey, 0) == 0)
                 {
                     try
                     {
                         pluginInfo.OnGamemodeJoin?.Invoke(gamemode);
+                        invokedMods.Add(pluginInfo);
                         Logging.Message("Plugin is suitable for game mode");
                     }
                     catch (Exception ex)
@@ -289,6 +291,7 @@ namespace Utilla.Behaviours
                     {
                         pluginInfo.OnGamemodeLeave?.Invoke(gamemode);
                         //Logging.Info($"Plugin {pluginInfo.Plugin.Info.Metadata.Name} is suitable for game mode");
+                        invokedMods.Clear();
                     }
                     catch (Exception ex)
                     {
