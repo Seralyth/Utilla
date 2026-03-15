@@ -9,9 +9,7 @@ using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.InputSystem;
 using UnityEngine.UI;
-using UnityEngine.UIElements;
 using Utilla.Models;
 using Utilla.Tools;
 
@@ -249,9 +247,9 @@ namespace Utilla.Behaviours
                 foreach (PluginInfo pluginInfo in GamemodeManager.Instance.pluginInfos)
                 {
                     string gamemode = NetworkSystem.Instance.GameModeString;
-                    if (!GamemodeManager.Instance.invokedMods.Contains(pluginInfo) && !legal) 
+                    if (!GamemodeManager.Instance.invokedMods.Contains(pluginInfo) && !legal)
                         pluginInfo.OnGamemodeJoin?.Invoke(gamemode);
-                    else if (GamemodeManager.Instance.invokedMods.Contains(pluginInfo) && legal && !pluginInfo.Gamemodes.Any(x => gamemode.Contains(x.ID))) 
+                    else if (GamemodeManager.Instance.invokedMods.Contains(pluginInfo) && legal && !pluginInfo.Gamemodes.Any(x => gamemode.Contains(x.ID)))
                         pluginInfo.OnGamemodeLeave?.Invoke(gamemode);
                 }
             }

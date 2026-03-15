@@ -288,7 +288,7 @@ internal class ConductBoardManager : MonoBehaviour
         switch (SystemInfo.operatingSystemFamily)
         {
             case OperatingSystemFamily.Windows:
-                {                    
+                {
                     string updateScript = @"@echo off
                     title Utilla Updater
 
