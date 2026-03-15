@@ -244,12 +244,15 @@ namespace Utilla.Behaviours
             current = PlayerPrefs.GetInt(Constants.LegalStatusKey, 0) == 1;
             legalButton.transform.Find("Title")?.GetComponent<TMP_Text>().text = current ? "LEGAL" : "ILLEGAL";
             legalButton.GetComponent<Renderer>().material = current ? Layout.currentButtons.First().gameObject.GetComponent<GorillaPressableButton>().unpressedMaterial : Layout.currentButtons.First().gameObject.GetComponent<GorillaPressableButton>().pressedMaterial;
-            if (!legal && GamemodeManager.Instance.pluginInfos.Any())
+            if (GamemodeManager.Instance.pluginInfos.Any())
             {
                 foreach (PluginInfo pluginInfo in GamemodeManager.Instance.pluginInfos)
                 {
-                    if (!GamemodeManager.Instance.invokedMods.Contains(pluginInfo)) 
-                        pluginInfo.OnGamemodeJoin?.Invoke(NetworkSystem.Instance.GameModeString);
+                    string gamemode = NetworkSystem.Instance.GameModeString;
+                    if (!GamemodeManager.Instance.invokedMods.Contains(pluginInfo) && !legal) 
+                        pluginInfo.OnGamemodeJoin?.Invoke(gamemode);
+                    else if (GamemodeManager.Instance.invokedMods.Contains(pluginInfo) && legal && !pluginInfo.Gamemodes.Any(x => gamemode.Contains(x.ID))) 
+                        pluginInfo.OnGamemodeLeave?.Invoke(gamemode);
                 }
             }
         }
