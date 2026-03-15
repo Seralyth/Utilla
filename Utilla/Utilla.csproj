@@ -274,5 +274,11 @@
 		<Reference Include="UnityEngine.XRModule">
 			<HintPath>$(GameAssemblyPath)\UnityEngine.XRModule.dll</HintPath>
 		</Reference>
+		<Reference Include="GT_CustomMapSupportRuntime">
+			<HintPath>$(GameAssemblyPath)\GT_CustomMapSupportRuntime.dll</HintPath>
+		</Reference>
+		<Reference Include="Unity.RenderPipelines.Universal.Runtime">
+			<HintPath>$(GameAssemblyPath)\Unity.RenderPipelines.Universal.Runtime.dll</HintPath>
+		</Reference>
 	</ItemGroup>
 </Project>
