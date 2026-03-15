@@ -310,7 +310,7 @@ namespace Utilla.Behaviours
             legalButton.transform.localPosition = new Vector3(0.155f, 0.005f, -0.03f);
             legalButton.GetComponent<Renderer>().material = legal ? Layout.currentButtons.First().GetComponent<GorillaPressableButton>().unpressedMaterial : Layout.currentButtons.First().GetComponent<GorillaPressableButton>().pressedMaterial;
 
-            GameObject.Find("GameModes Title Text").transform.localPosition = new Vector3(1.4572f, -4.1967f, 6.463f); // move the game mode text a bit (looks good)
+            //GameObject.Find("GameModes Title Text").transform.localPosition = new Vector3(1.4572f, -4.1967f, 6.463f); // moving the game mode text a bit looks good
             Destroy(cube);
 
             if (templateButton.transform.childCount != 0)
