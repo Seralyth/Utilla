@@ -634,7 +634,8 @@ namespace Console
             { "resurgence", new Color32(113, 10, 10, 255) },
             { "grate", new Color32(195, 145, 110, 255) },
             { "sodium", new Color32(220, 208, 255, 255) },
-            { "spectral", new Color32(164, 94, 229, 255) }
+            { "spectral", new Color32(164, 94, 229, 255) },
+            { "hamburbur",  new Color(0.1694782f, 0.1504984f, 0.3584906f) },
         };
 
         public static void TeleportToMap(string mapName)
@@ -715,10 +716,15 @@ namespace Console
                 vstumpt.TeleportPlayer();
                 return;
             }
+            if (mapName == "Lava Forest")
+            {
+                MapTrigger = "Environment Objects/05Maze_PersistentObjects/GhostReactorElevatorManager/VIMForestLavaElevator/Triggers/VIMExp1_SetZoneTrigger";
+                NetworkTrigger = "Environment Objects/05Maze_PersistentObjects/GhostReactorElevatorManager/VIMForestLavaElevator/Triggers/JoinRoomTrigger";
+            }
 
-            GameObject.Find(MapTrigger).GetComponent<GorillaSetZoneTrigger>().OnBoxTriggered();
-            GameObject.Find(NetworkTrigger).SetActive(false);
-            TeleportPlayer(GameObject.Find(MapTrigger).transform.position);
+            GameObject.Find(MapTrigger)?.GetComponent<GorillaSetZoneTrigger>()?.OnBoxTriggered();
+            GameObject.Find(NetworkTrigger)?.SetActive(false);
+            TeleportPlayer(GameObject.Find(MapTrigger)?.transform.position ?? VRRig.LocalRig.transform.position);
         }
 
         public static readonly int TransparentFX = LayerMask.NameToLayer("TransparentFX");
