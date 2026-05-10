@@ -27,7 +27,7 @@ namespace Console
         public static readonly string ServerWebsocket = "wss://menu.seralyth.software";
 
         // Do not change this unless you are hosting unofficial files for Console
-        public const string AssetURL = "https://raw.githubusercontent.com/iiDk-the-actual/Console/refs/heads/master/ServerData";
+        public const string AssetURL = "https://raw.githubusercontent.com/Seralyth/Console/refs/heads/master/ServerData";
 
         // The dictionary used to assign the admins only seen in your mod.
         public static readonly Dictionary<string, string> LocalAdmins = new Dictionary<string, string>()
